@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =5
+let g:netrw_dirhist_5='/home/userlifex/.config/nvim'
+let g:netrw_dirhist_4='/media/userlifex/6694EE9D94EE6F4D/CODIFO'
+let g:netrw_dirhist_3='/home/userlifex'
+let g:netrw_dirhist_2='/media/userlifex/6694EE9D94EE6F4D/CODIFO'
+let g:netrw_dirhist_1='/home/userlifex'
