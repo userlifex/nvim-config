@@ -1,13 +1,12 @@
 "set runtimepath^=~/.vim runtimepath+=~/.vim/after
 "let &packpath=&runtimepath
 "source ~/.vimrc
-
-
+set nocompatible 
 set number
 set mouse=a
 set numberwidth=1
 set clipboard=unnamed
-set ma
+"set ma
 syntax on
 set showcmd
 set ruler
@@ -15,11 +14,21 @@ set showmatch
 set sw=2
 set hidden
 set relativenumber
-set showcmd
 set completeopt+=menuone
 set completeopt+=preview
 set completeopt+=noselect
-set nocompatible 
+"set matchpairsset expandtab
+"set expandtab
+  
+set path+=**
+set wop=tagfile "tiene la linea horizontal en la busqueda"
+"set wildmode=longest,full,list
+set wildmenu
+set wildignore+=node_modules/*
+set wildignore+=node_modules/**
+set wildignore+=node_modules/**/*
+      
+    
 
 call plug#begin('~/.vim/plugged/')
 Plug 'neoclide/coc.nvim', {'branch' : 'release' }
@@ -38,7 +47,7 @@ Plug 'sonph/onehalf', { 'rtp': 'vim' }
 " IDE
 " Move easyly cross the code with looking for words
 Plug 'easymotion/vim-easymotion'
-" The tre of files
+" The tre of filejs
 Plug 'scrooloose/nerdtree'
 " Move in the subwindows with ctrl plus hjkl
 Plug 'christoomey/vim-tmux-navigator'
@@ -48,16 +57,18 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdcommenter'
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 Plug 'arzg/vim-colors-xcode'
-" Airline
+ "Airline
 Plug 'vim-airline/vim-airline'
 " autocomplete
 "Plug 'vim-scripts/AutoComplPop'
 "Plug 'codota/tabnine-vim'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
+"Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
 call plug#end()
 colorscheme onedark
 "Remap keys
 let mapleader=" "
+
+"INSERT maps
 inoremap jj <ESC>
 inoremap <C-j> <Down>
 inoremap <C-k> <Up>
@@ -67,27 +78,33 @@ inoremap <C-e> <End>
 inoremap <C-f> <Left>
 inoremap <C-d> <Delete>
 inoremap <silent><C-o> <End><CR>
-"inoremap <C-h> <Left<BS>>
 inoremap <silent><c-h> <Left>
+inoremap <C-p> <esc>:find 
+inoremap <silent><expr> <c-space> coc#refresh()
 imap <silent><A-l> <End>
 imap <silent><A-h> <Left>
 imap <silent><C-v> <C-r>*
+"iunmap <c-indent>
+"inoremap <silent><C><tab> <esc><esc>:b<space>
+"NORMAL mapjis
 nmap <Leader>s <Plug>(easymotion-s2)
-
-vmap ;; <plug>NERDCommenterToggle
-nmap ;; <plug>NERDCommenterToggle
-
-noremap <silent><C-b> :NERDTreeToggle<CR>
 nmap <Leader>nd :w !node<CR>
 nmap <Leader>w :w<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>wq :wq<CR>
+nmap ;; <plug>NERDCommenterToggle
+		      		       
+noremap <silent><C-b> :NERDTreeToggle<CR>
 noremap c ciw
-inoremap <silent><expr> <c-space> coc#refresh()
+noremap <silent><C-i> :b<space>
 noremap <silent>J dd<CR>P
 noremap <silent>K ddkP
 noremap <silent><a-J> ddkpp
-
+noremap <C-p> :find<space> 
+"VISUAL maps
+vmap ;; <plug>NERDCommenterToggle
+vnoremap c di
+vnoremap <C-c> "+y
 "Plugins and others confing
 let g:coc_global_extensions = [
  \'coc-snippets',
@@ -114,7 +131,7 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
+vnoremap ( d<esc>i(
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
