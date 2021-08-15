@@ -1,26 +1,23 @@
 "let &packpath=&runtimepath
 "let &packpath=&runtimepath
 "source ~/.vimrc
-
 set nocompatible 
-set showmatch
 set number
-set mouse=a
 set mouse=a
 set numberwidth=1
 set clipboard=unnamed
 syntax on
 set showcmd
-set ruler
+"set ruler
 set showmatch
 set sw=2
 set hidden
 set relativenumber
-set exrc
+"set exrc
 "set nohlsearch
 set scrolloff=8
 set completeopt=menuone,noinsert,noselect
-
+	    
 set path+=**
 set wildmenu
 set wildignore+=**/node_modules/**
@@ -28,6 +25,7 @@ set wildignore+=node_modules/**
 set wildignore+=node_modules/**/*
 set termguicolors 
     
+
 
 call plug#begin('~/.vim/plugged/')
 
@@ -39,10 +37,10 @@ Plug 'neoclide/coc.nvim', {'branch' : 'release' }
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
+Plug 'larsbs/vimterial_dark'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
+Plug 'tomasr/molokai'
 "Plug 'ryanoasis/vim-webdevicons'
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-gitgutter'
@@ -69,13 +67,30 @@ Plug 'chrisbra/Colorizer'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'powerline/powerline'
+Plug 'pangloss/vim-javascript'
+"for esling
+"Plug 'w0rp/ale'
+"
+"for test
+Plug 'vim-test/vim-test'
 
+"Ident
+"Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Yggdroot/indentLine'
 call plug#end()
 colorscheme gruvbox
-highlight Normal guibg=none
+"colorscheme molokai
+"let g:molokai_original = 1
+
+"let g:rehash256 = 1
+"highlight Normal guibg=none
 "Remap keys
 let mapleader=" "
 
+" Vim
+let g:indentLine_color_term = 239
+
+let g:indentLine_char = '|'
 "INSERT maps
 inoremap jj <ESC>
 inoremap <C-j> <Down>
@@ -102,9 +117,9 @@ nmap <Leader>w :w<CR>
 nmap <silent>qq :q<CR>
 nmap <Leader>wq :wq<CR>
 nmap ;; <plug>NERDCommenterToggle
-nmap <silent><C-f> 
-
-map <C-b> :call NERDTreeToggleAndRefresh()<CR>zz
+nmap <Leader>vi :so ~/.vimrc<cr>
+nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>zz
+nmap <Leader>co :Colors<cr>
 
 function NERDTreeToggleAndRefresh()
   if g:NERDTree.IsOpen()
@@ -122,15 +137,21 @@ noremap <TAB> :Buffers<CR>
 "noremap <TAB> :bjh<space>
 "noremap <silent><c-l> :bnext<cr>
 "BUFFER CONTROLS
-noremap <silent>L :bnext<cr>
-noremap <silent>H :bprevious<cr>
+"noremap <silent>L :bnext<cr>
+"noremap <silent>H :bprevious<cr>
 noremap <silent>ww :bd<cr>
 noremap <silent><C-o> <C-^>
+"up and down lines
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
 
 noremap c ciw
-noremap <silent>J dd<CR>P
-noremap <silent>K ddkP
-noremap <silent><a-j> ddkpp
+noremap <silent>J yyp
+
 "noremap <C-p> :find<space> 
 noremap <C-p> :GFiles<CR>
 noremap <A-p> :Files<CR>
@@ -138,7 +159,23 @@ noremap <A-p> :Files<CR>
 noremap <silent>ss :wall<CR>
 noremap <silent>S :w<CR>
 "noremap <silent><c-l> ^I
-noremap <silent>ff :Prettier<CR>
+"noremap <silent>ff :Prettier<CR>
+noremap <silent>fd :CocCommand prettier.formatFile<cr> 
+noremap <silent>ff :Prettier<cr> 
+noremap <silent>fs :CocCommand eslint.executeAutofix<cr> 
+nmap <leader>f :CocCommand prettier.formatFile<cr> 
+noremap <silent>L <end>
+noremap <silent>H <home>
+noremap <silent>tt ea
+
+
+" these "Ctrlmappings" work well when Caps Lock is mapped to Ctrl
+"nmap <silent>tn :TestNearest<CR>
+nmap <silent>tf :w<cr>:TestFile<CR>
+nmap <silent>ts :wall<cr>:TestSuite<CR>
+"nmap <silent>tl :TestLast<CR>
+"nmap <silent>tg :TestVisit<CR>
+
 "VISUAL maps
 vmap ;; <plug>NERDCommenterToggle
 vnoremap c di
@@ -152,8 +189,9 @@ let g:coc_global_extensions = [
  \'coc-emmet',
  \'coc-css',
  \'coc-angular',
+ \'coc-eslint',
+ \'coc-prettier',
  \]
-
 
 
 
@@ -164,8 +202,16 @@ let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 let g:NERDTreeIgnore = ['^node_modules$']
 let NERDTreeShowHidden=1
-let g:airline_theme='bubblegum'
-""
+let g:airline_theme='base16_monokai'
+let g:NERDTreeWinPos = "right"
+let g:javascript_plugin_jsdoc = 1
+"qq
+"
+
+"let g:ale_sign_error = '❌'
+"let g:ale_sign_warning = '⚠️'
+
+"let g:ale_fix_on_save = 1
 "
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -181,13 +227,10 @@ endfunction
 
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-"command! -nargs=0 Prettier :CocCommand prettier.formatFile
-"vmap <leader>f  <Plug>(coc-format-selected)
-"nmap <leader>f  <Plug>(coc-format-selected)
-"
 let g:NERDTreeGitStatusWithFlags = 1
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = " "
 let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
  exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
  exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
@@ -249,4 +292,6 @@ let g:fzf_colors =
         "\ '#add4fb', '#ffafaf', '#87d7d7', '#e4e4e4'
       "\ ]
     "endif
-
+    "
+"highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+"highlight ctermbg=NONE
