@@ -8,7 +8,7 @@ set numberwidth=1
 set clipboard=unnamed
 syntax on
 set showcmd
-"set ruler
+set ruler
 set showmatch
 set sw=2
 set hidden
@@ -17,7 +17,6 @@ set relativenumber
 "set nohlsearch
 set scrolloff=8
 set completeopt=menuone,noinsert,noselect
-	    
 set path+=**
 set wildmenu
 set wildignore+=**/node_modules/**
@@ -25,7 +24,21 @@ set wildignore+=node_modules/**
 set wildignore+=node_modules/**/*
 set termguicolors 
     
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
 
+" Better display for messages
+"set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
 
 call plug#begin('~/.vim/plugged/')
 
@@ -33,7 +46,9 @@ call plug#begin('~/.vim/plugged/')
 " post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
+
 Plug 'neoclide/coc.nvim', {'branch' : 'release' }
+Plug 'neoclide/jsonc.vim'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -69,38 +84,64 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'powerline/powerline'
 Plug 'pangloss/vim-javascript'
 "for esling
-"Plug 'w0rp/ale'
 "
+"Plug 'w0rp/ale'
+
+
+
+"TS
+"azyncronus linter for ts
+Plug 'dense-analysis/ale'
+
+
+
+
+
 "for test
 Plug 'vim-test/vim-test'
-
+Plug 'tpope/vim-surround'
 "Ident
 "Plug 'nathanaelkane/vim-indent-guides'
 Plug 'Yggdroot/indentLine'
+"popup
+Plug 'nvim-lua/plenary.nvim'
+
+Plug 'nvim-lua/popup.nvim'
 call plug#end()
 colorscheme gruvbox
 "colorscheme molokai
+"colorscheme onehalfdark
+colorscheme dracula
+"colorscheme onehalflight
 "let g:molokai_original = 1
+let g:rehash256 = 1
+highlight Normal guibg=none;
 
-"let g:rehash256 = 1
-"highlight Normal guibg=none
 "Remap keys
 let mapleader=" "
 
-" Vim
-let g:indentLine_color_term = 239
+ "Vim
+"let g:indentLine_color_term = 239
 
 let g:indentLine_char = '|'
 "INSERT maps
 inoremap jj <ESC>
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
-inoremap <C-l> <Right>
+inoremap <C-j> <down>
+inoremap <C-k> <up>
+inoremap <C-f> <end>
 inoremap <C-b> <Home>
-inoremap <C-e> <End>
-inoremap <C-f> <Left>
+inoremap <C-l> <right>
+"inoremap <C-f> <Left>
 inoremap <C-d> <Delete>
 inoremap <silent><C-o> <End><CR>
+inoremap <silent>ff <End> {}<left>
+inoremap <silent>fd <End>() {}<left>
+"inoremap <silent>fj <End>()<left>
+
+inoremap <silent>fk => {}<left>
+
+inoremap <silent>;; <end>;<End><cr>
+
 inoremap <silent><c-h> <Left>
 "inoremap <C-p> <esc>:find 
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -113,12 +154,21 @@ imap <silent><C-v> <C-r>*
 "NORMAL mapjis
 nmap <Leader>s <Plug>(easymotion-s2)
 nmap <Leader>nd :w !node<CR>
+nmap <Leader>ns :w !tsc<CR>
 nmap <Leader>w :w<CR>
 nmap <silent>qq :q<CR>
 nmap <Leader>wq :wq<CR>
 nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.vimrc<cr>
-nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>zz
+nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
+nnoremap <leader>o :call NERDTreeToggleAndRefresh()<CR><c-w>t
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
 nmap <Leader>co :Colors<cr>
 
 function NERDTreeToggleAndRefresh()
@@ -126,9 +176,21 @@ function NERDTreeToggleAndRefresh()
     :NERDTreeToggle
   else 
     :NERDTreeFind
-  endif
   :NERDTreeRefreshRoot
+endif
 endfunction	      		       
+
+
+augroup KeepCentered
+  autocmd!
+  autocmd CursorMoved * normal! zz
+augroup END
+
+inoremap <CR> <C-\><C-O><C-E><CR>
+inoremap <BS> <BS><C-O>zz
+"nnoremap o <C-E>o
+"nmap <silent> K :call CocActionAsync('doHover', 'float') <CR>
+nmap <silent> K :call CocAction('doHover', 'float') <CR>
 
 "noremap <silent><C-b> :NERDTreeToggle<CR>
 "noremap <silent><C-w> :NERDTreeFind<CR> 
@@ -149,15 +211,16 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
-noremap c ciw
+noremap <silent>C ciw
 noremap <silent>J yyp
 
+"noremap <leader>o <C-w>t
 "noremap <C-p> :find<space> 
 noremap <C-p> :GFiles<CR>
 noremap <A-p> :Files<CR>
 
 noremap <silent>ss :wall<CR>
-noremap <silent>S :w<CR>
+"noremap <silent>S :w<CR>
 "noremap <silent><c-l> ^I
 "noremap <silent>ff :Prettier<CR>
 noremap <silent>fd :CocCommand prettier.formatFile<cr> 
@@ -173,40 +236,54 @@ noremap <silent>tt ea
 "nmap <silent>tn :TestNearest<CR>
 nmap <silent>tf :w<cr>:TestFile<CR>
 nmap <silent>ts :wall<cr>:TestSuite<CR>
+nnoremap <silent>cii ci(
 "nmap <silent>tl :TestLast<CR>
 "nmap <silent>tg :TestVisit<CR>
+"nnoremap <silent>vv v
 
+vnoremap ii i(
+"vnoremap <silent>'' S'
 "VISUAL maps
 vmap ;; <plug>NERDCommenterToggle
-vnoremap c di
 vnoremap <C-c> "+y
+
+
+
 "Plugins and others confing
 let g:coc_global_extensions = [
  \'coc-snippets',
  \'coc-tsserver',
- \'coc-json',
  \'coc-vetur',
  \'coc-emmet',
  \'coc-css',
  \'coc-angular',
  \'coc-eslint',
  \'coc-prettier',
+ \'coc-json',
+ \'coc-html-css-support',
  \]
 
 
+autocmd FileType scss setl iskeyword+=@-@
 
 let g:use_emmet_complete_tag = 1
 let g:kite_supported_languages = []
 let g:airline_poweline_fonts = 1
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:NERDTreeIgnore = ['^node_modules$']
 let NERDTreeShowHidden=1
 let g:airline_theme='base16_monokai'
 let g:NERDTreeWinPos = "right"
 let g:javascript_plugin_jsdoc = 1
 "qq
-"
+autocmd Filetype json
+  \ let g:indentLine_setConceal = 0 |
+  \ let g:vim_json_syntax_conceal = 0
+"let g:vim_json_conceal=0
+augroup JsonToJsonc
+      autocmd! FileType json set filetype=jsonc
+    augroup END
 
 "let g:ale_sign_error = '❌'
 "let g:ale_sign_warning = '⚠️'
