@@ -1,10 +1,11 @@
 "let &packpath=&runtimepath
 "let &packpath=&runtimepath
 "source ~/.vimrc
+
 set nocompatible 
 set number
 set mouse=a
-set numberwidth=1
+"set numberwidth=1
 set clipboard=unnamed
 syntax on
 set showcmd
@@ -12,10 +13,10 @@ set ruler
 set showmatch
 set sw=2
 set hidden
-set relativenumber
+"set relativenumber
 "set exrc
 "set nohlsearch
-set scrolloff=8
+set scrolloff=12
 set completeopt=menuone,noinsert,noselect
 set path+=**
 set wildmenu
@@ -41,22 +42,27 @@ set shortmess+=c
 set signcolumn=yes
 
 call plug#begin('~/.vim/plugged/')
-
-
 " post install (yarn install | npm install) then load plugin only for editing supported files
+" THEMES 
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'larsbs/vimterial_dark'
+Plug 'tomasr/molokai'
 
+" LANGS
+Plug 'pantharshit00/vim-prisma'
+Plug 'jparise/vim-graphql'
+Plug 'statico/vim-javascript-sql'
 
+" UTILS
 Plug 'neoclide/coc.nvim', {'branch' : 'release' }
 Plug 'neoclide/jsonc.vim'
-
+Plug 'gregsexton/MatchTag'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'larsbs/vimterial_dark'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'tomasr/molokai'
-"Plug 'ryanoasis/vim-webdevicons'
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-gitgutter'
 Plug 'jiangmiao/auto-pairs'
@@ -66,6 +72,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'dracula/vim', { 'as': 'dracula' } 
 Plug 'morhetz/gruvbox'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
+
 " IDE
 " Move easyly cross the code with looking for words
 Plug 'scrooloose/nerdtree'
@@ -78,6 +85,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 "Plug 'arzg/vim-colors-xcode'
 Plug 'chrisbra/Colorizer'
+
  "Airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -86,16 +94,10 @@ Plug 'pangloss/vim-javascript'
 "for esling
 "
 "Plug 'w0rp/ale'
-
-
-
-"TS
 "azyncronus linter for ts
 Plug 'dense-analysis/ale'
 
-
-
-
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "for test
 Plug 'vim-test/vim-test'
@@ -107,19 +109,40 @@ Plug 'Yggdroot/indentLine'
 Plug 'nvim-lua/plenary.nvim'
 
 Plug 'nvim-lua/popup.nvim'
+
+"ejs syntax for
+Plug 'nikvdp/ejs-syntax'
 call plug#end()
-colorscheme gruvbox
+
+"let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
+
+
+let g:material_terminal_italics = 1
+let g:material_theme_style = 'darker'
+colorscheme material
+"colorscheme torte
+colorscheme material 
+"colorscheme gruvbox
+"colorscheme onehalfdark
 "colorscheme molokai
 "colorscheme onehalfdark
-colorscheme dracula
+"colorscheme dracula
 "colorscheme onehalflight
 "let g:molokai_original = 1
 let g:rehash256 = 1
-highlight Normal guibg=none;
-
+"highlight Normal guibg=none;
 "Remap keys
 let mapleader=" "
 
+
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
  "Vim
 "let g:indentLine_color_term = 239
 
@@ -140,7 +163,8 @@ inoremap <silent>fd <End>() {}<left>
 
 inoremap <silent>fk => {}<left>
 
-inoremap <silent>;; <end>;<End><cr>
+inoremap <silent>;; <end>;<End>
+inoremap <silent>,, <end>,<End>
 
 inoremap <silent><c-h> <Left>
 "inoremap <C-p> <esc>:find 
@@ -155,14 +179,12 @@ imap <silent><C-v> <C-r>*
 nmap <Leader>s <Plug>(easymotion-s2)
 nmap <Leader>nd :w !node<CR>
 nmap <Leader>ns :w !tsc<CR>
-nmap <Leader>w :w<CR>
 nmap <silent>qq :q<CR>
-nmap <Leader>wq :wq<CR>
 nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.vimrc<cr>
 nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
 nnoremap <leader>o :call NERDTreeToggleAndRefresh()<CR><c-w>t
-
+nnoremap <c-y> :NERDTreeFind<CR>
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -180,14 +202,24 @@ function NERDTreeToggleAndRefresh()
 endif
 endfunction	      		       
 
+nmap <leader>11 ToggleCMD()<cr>
+nmap <leader>22 ToggleCMDBig()<cr>
 
-augroup KeepCentered
-  autocmd!
-  autocmd CursorMoved * normal! zz
-augroup END
+function ToggleCMD()
+  set cmdheight=1
+endfunction
 
-inoremap <CR> <C-\><C-O><C-E><CR>
-inoremap <BS> <BS><C-O>zz
+function ToggleCMDBig()
+  set cmdheight=5
+endfunction
+
+"augroup KeepCentered
+  "autocmd!
+  "autocmd CursorMoved * normal! zz
+"augroup END
+
+"inoremap <CR> <C-\><C-O><C-E><CR>
+"inoremap <BS> <BS><C-O>zz
 "nnoremap o <C-E>o
 "nmap <silent> K :call CocActionAsync('doHover', 'float') <CR>
 nmap <silent> K :call CocAction('doHover', 'float') <CR>
@@ -231,7 +263,6 @@ noremap <silent>L <end>
 noremap <silent>H <home>
 noremap <silent>tt ea
 
-
 " these "Ctrlmappings" work well when Caps Lock is mapped to Ctrl
 "nmap <silent>tn :TestNearest<CR>
 nmap <silent>tf :w<cr>:TestFile<CR>
@@ -261,10 +292,19 @@ let g:coc_global_extensions = [
  \'coc-prettier',
  \'coc-json',
  \'coc-html-css-support',
+ \'coc-jest',
+ \'coc-tabnine',
+ \'coc-prisma',
  \]
 
 
 autocmd FileType scss setl iskeyword+=@-@
+
+"let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
 
 let g:use_emmet_complete_tag = 1
 let g:kite_supported_languages = []
@@ -277,6 +317,7 @@ let g:airline_theme='base16_monokai'
 let g:NERDTreeWinPos = "right"
 let g:javascript_plugin_jsdoc = 1
 "qq
+"let g:airline_theme = 'material'
 autocmd Filetype json
   \ let g:indentLine_setConceal = 0 |
   \ let g:vim_json_syntax_conceal = 0
@@ -321,6 +362,7 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
+"let $FZF_DEFAULT_COMMAND='rg --files --hidden'
 " An action can be a reference to a function that processes selected lines
 function! s:build_quickfix_list(lines)
   call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
@@ -370,5 +412,5 @@ let g:fzf_colors =
       "\ ]
     "endif
     "
-"highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 "highlight ctermbg=NONE
