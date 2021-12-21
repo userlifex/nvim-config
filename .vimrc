@@ -41,6 +41,10 @@ set shortmess+=c
 " always show signcolumns
 set signcolumn=yes
 
+filetype plugin indent on
+filetype on
+filetype indent on
+
 call plug#begin('~/.vim/plugged/')
 " post install (yarn install | npm install) then load plugin only for editing supported files
 " THEMES 
@@ -59,8 +63,16 @@ Plug 'statico/vim-javascript-sql'
 Plug 'neoclide/coc.nvim', {'branch' : 'release' }
 Plug 'neoclide/jsonc.vim'
 Plug 'gregsexton/MatchTag'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+
+"Navigation
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'junegunn/fzf.vim'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
@@ -112,16 +124,45 @@ Plug 'nvim-lua/popup.nvim'
 
 "ejs syntax for
 Plug 'nikvdp/ejs-syntax'
+
+"Formatter 
+Plug 'ruby-formatter/rufo-vim'
+
+"Ruby extension for erb
+Plug 'kana/vim-textobj-user'
+Plug 'https://github.com/whatyouhide/vim-textobj-erb'
+
+"Support ruby lang
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+"syntax highlight
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+"language client for rename and those things
+"Plug 'autozimu/LanguageClient-neovim', {
+    "\ 'branch': 'next',
+    "\ 'do': 'bash install.sh',
+    "\ }
+
+ "(Optional) Multi-entry selection UI.
+"Plug 'junegunn/fzf'
+
+"show who make a commit
+Plug 'f-person/git-blame.nvim'
+
+"search similiar to vimgrep
+Plug 'mileszs/ack.vim'
 call plug#end()
 
 "let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
 
 
 let g:material_terminal_italics = 1
-let g:material_theme_style = 'darker'
 colorscheme material
+let g:material_theme_style = 'default'
 "colorscheme torte
-colorscheme material 
+"colorscheme material 
 "colorscheme gruvbox
 "colorscheme onehalfdark
 "colorscheme molokai
@@ -157,11 +198,6 @@ inoremap <C-l> <right>
 "inoremap <C-f> <Left>
 inoremap <C-d> <Delete>
 inoremap <silent><C-o> <End><CR>
-inoremap <silent>ff <End> {}<left>
-inoremap <silent>fd <End>() {}<left>
-"inoremap <silent>fj <End>()<left>
-
-inoremap <silent>fk => {}<left>
 
 inoremap <silent>;; <end>;<End>
 inoremap <silent>,, <end>,<End>
@@ -172,6 +208,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 imap <silent><A-l> <End>
 imap <silent><A-h> <Left>
 imap <silent><C-v> <C-r>*
+inoremap %%<cr> <%  %><left><left><left><left>
 
 "iunmap <c-indent>
 "inoremap <silent><C><tab> <esc><esc>:b<space>
@@ -185,13 +222,24 @@ nmap <Leader>vi :so ~/.vimrc<cr>
 nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
 nnoremap <leader>o :call NERDTreeToggleAndRefresh()<CR><c-w>t
 nnoremap <c-y> :NERDTreeFind<CR>
-" GoTo code navigation.
+
+" COC code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-nmap <Leader>co :Colors<cr>
+" Using Lua functions
+"nnoremap <c-p> <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
+nnoremap <tab> <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+
+
+"nmap <Leader>co :Colors<cr>
+"this works with fzf
+
 
 function NERDTreeToggleAndRefresh()
   if g:NERDTree.IsOpen()
@@ -202,32 +250,17 @@ function NERDTreeToggleAndRefresh()
 endif
 endfunction	      		       
 
-nmap <leader>11 ToggleCMD()<cr>
-nmap <leader>22 ToggleCMDBig()<cr>
-
-function ToggleCMD()
-  set cmdheight=1
-endfunction
-
-function ToggleCMDBig()
-  set cmdheight=5
-endfunction
-
 "augroup KeepCentered
   "autocmd!
   "autocmd CursorMoved * normal! zz
 "augroup END
 
-"inoremap <CR> <C-\><C-O><C-E><CR>
-"inoremap <BS> <BS><C-O>zz
-"nnoremap o <C-E>o
-"nmap <silent> K :call CocActionAsync('doHover', 'float') <CR>
 nmap <silent> K :call CocAction('doHover', 'float') <CR>
 
 "noremap <silent><C-b> :NERDTreeToggle<CR>
 "noremap <silent><C-w> :NERDTreeFind<CR> 
 "noremap <C-n> :b<space>
-noremap <TAB> :Buffers<CR>
+"noremap <TAB> :Buffers<CR>
 "noremap <TAB> :bjh<space>
 "noremap <silent><c-l> :bnext<cr>
 "BUFFER CONTROLS
@@ -246,10 +279,12 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 noremap <silent>C ciw
 noremap <silent>J yyp
 
+noremap <silent>gl ``
 "noremap <leader>o <C-w>t
 "noremap <C-p> :find<space> 
-noremap <C-p> :GFiles<CR>
-noremap <A-p> :Files<CR>
+"noremap <C-p> :GFiles<CR>
+"noremap <A-p> :Files<CR>
+"for FZF
 
 noremap <silent>ss :wall<CR>
 "noremap <silent>S :w<CR>
@@ -259,6 +294,7 @@ noremap <silent>fd :CocCommand prettier.formatFile<cr>
 noremap <silent>ff :Prettier<cr> 
 noremap <silent>fs :CocCommand eslint.executeAutofix<cr> 
 nmap <leader>f :CocCommand prettier.formatFile<cr> 
+noremap <silent>fr :Rufo<cr>
 noremap <silent>L <end>
 noremap <silent>H <home>
 noremap <silent>tt ea
@@ -281,6 +317,9 @@ vnoremap <C-c> "+y
 
 
 "Plugins and others confing
+
+"let g:rufo_auto_formatting = 1
+
 let g:coc_global_extensions = [
  \'coc-snippets',
  \'coc-tsserver',
@@ -295,10 +334,14 @@ let g:coc_global_extensions = [
  \'coc-jest',
  \'coc-tabnine',
  \'coc-prisma',
+ \'coc-solargraph',
  \]
 
 
 autocmd FileType scss setl iskeyword+=@-@
+
+autocmd BufNewFile,BufRead *.html.erb set filetype=html
+"this allow emmet to edit erb files
 
 "let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
 command! -bang -nargs=* Rg
@@ -307,6 +350,12 @@ command! -bang -nargs=* Rg
   \   fzf#vim#with_preview(), <bang>0)
 
 let g:use_emmet_complete_tag = 1
+let g:user_emmet_settings = {
+\  "emmet.includeLanguages": {
+\   "html.erb": "html"
+\  }
+\ }
+
 let g:kite_supported_languages = []
 let g:airline_poweline_fonts = 1
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
@@ -357,10 +406,10 @@ endfunction
 filetype plugin indent on
 "FZF CON qG
 " This is the default extra key bindings
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+"let g:fzf_action = {
+  "\ 'ctrl-t': 'tab split',
+  "\ 'ctrl-x': 'split',
+  "\ 'ctrl-v': 'vsplit' }
 
 "let $FZF_DEFAULT_COMMAND='rg --files --hidden'
 " An action can be a reference to a function that processes selected lines
@@ -369,48 +418,23 @@ function! s:build_quickfix_list(lines)
   copen
   cc
 endfunction
-" Customize fzf colors to match your color scheme
-" - fzf#wrap translates this to a set of `--color` options
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Label'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-" Terminal colors for seoul256 color scheme
-    "if has('nvim')
-      "let g:terminal_color_0 = '#4e4e4e'
-      "let g:terminal_color_1 = '#d68787'
-      "let g:terminal_color_2 = '#5f865f'
-      "let g:terminal_color_3 = '#d8af5f'
-      "let g:terminal_color_4 = '#85add4'
-      "let g:terminal_color_5 = '#d7afaf'
-      "let g:terminal_color_6 = '#87afaf'
-      "let g:terminal_color_7 = '#d0d0d0'
-      "let g:terminal_color_8 = '#626262'
-      "let g:terminal_color_9 = '#d75f87'
-      "let g:terminal_color_10 = '#87af87'
-      "let g:terminal_color_11 = '#ffd787'
-      "let g:terminal_color_12 = '#add4fb'
-      "let g:terminal_color_13 = '#ffafaf'
-      "let g:terminal_color_14 = '#87d7d7'
-      "let g:terminal_color_15 = '#e4e4e4'
-    "else
-      "let g:terminal_ansi_colors = [
-        "\ '#4e4e4e', '#d68787', '#5f865f', '#d8af5f',
-        "\ '#85add4', '#d7afaf', '#87afaf', '#d0d0d0',
-        "\ '#626262', '#d75f87', '#87af87', '#ffd787',
-        "\ '#add4fb', '#ffafaf', '#87d7d7', '#e4e4e4'
-      "\ ]
-    "endif
-    "
+
+"LANGUAGE CLIENT CONFIG
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'typescript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ }
+
+" note that if you are using Plug mapping you should not use `noremap` mappings.
+"nmap <F5> <Plug>(lcn-menu)
+" Or map each action separately
+"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 "highlight ctermbg=NONE
