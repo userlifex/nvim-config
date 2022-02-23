@@ -11,6 +11,7 @@ syntax on
 set showcmd
 set ruler
 set showmatch
+set et
 set sw=2
 set hidden
 "set relativenumber
@@ -53,6 +54,7 @@ Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'larsbs/vimterial_dark'
 Plug 'tomasr/molokai'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 " LANGS
 Plug 'pantharshit00/vim-prisma'
@@ -65,8 +67,8 @@ Plug 'neoclide/jsonc.vim'
 Plug 'gregsexton/MatchTag'
 
 "Navigation
-"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-"Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -103,6 +105,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'powerline/powerline'
 Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx' "react
+
 "for esling
 "
 "Plug 'w0rp/ale'
@@ -127,6 +131,7 @@ Plug 'nikvdp/ejs-syntax'
 
 "Formatter 
 Plug 'ruby-formatter/rufo-vim'
+Plug 'ngmy/vim-rubocop'
 
 "Ruby extension for erb
 Plug 'kana/vim-textobj-user'
@@ -139,6 +144,8 @@ Plug 'tpope/vim-rails'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
+"Fold
+Plug 'vim-utils/vim-ruby-fold'
 "language client for rename and those things
 "Plug 'autozimu/LanguageClient-neovim', {
     "\ 'branch': 'next',
@@ -153,25 +160,48 @@ Plug 'f-person/git-blame.nvim'
 
 "search similiar to vimgrep
 Plug 'mileszs/ack.vim'
+
+" stats
+Plug 'wakatime/vim-wakatime'
+
+"kotlin
+Plug 'udalov/kotlin-vim'
+
+"jsx
+Plug 'maxmellon/vim-jsx-pretty'
 call plug#end()
 
 "let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
 
 
 let g:material_terminal_italics = 1
-colorscheme material
-let g:material_theme_style = 'default'
+let g:material_theme_style = 'darker'
+"colorscheme material
 "colorscheme torte
 "colorscheme material 
 "colorscheme gruvbox
 "colorscheme onehalfdark
 "colorscheme molokai
 "colorscheme onehalfdark
-"colorscheme dracula
+colorscheme dracula
 "colorscheme onehalflight
 "let g:molokai_original = 1
 let g:rehash256 = 1
-"highlight Normal guibg=none;
+highlight Normal guibg=none;
+
+let g:tokyonight_style = "night"
+let g:tokyonight_italic_functions = 1
+let g:tokyonight_sidebars = [ "qf", "vista_kind", "terminal", "packer" ]
+
+" Change the "hint" color to the "orange" color, and make the "error" color bright red
+let g:tokyonight_colors = {
+  \ 'hint': 'orange',
+  \ 'error': '#ff0000'
+\ }
+let g:tokyonight_terminal_colors = 1	
+" Load the colorscheme
+colorscheme tokyonight
+
 "Remap keys
 let mapleader=" "
 
@@ -237,8 +267,10 @@ nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 
-"nmap <Leader>co :Colors<cr>
+nmap <Leader>co :wa<space>!code<cr>
 "this works with fzf
+
+"path of the current file
 
 
 function NERDTreeToggleAndRefresh()
@@ -250,12 +282,36 @@ function NERDTreeToggleAndRefresh()
 endif
 endfunction	      		       
 
+set cursorline
+hi cursorline cterm=none term=none
+autocmd WinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
+"highlight CursorLine guibg=#303000 ctermbg=234
+
+
+"folding
+"let g:ruby_fold_lines_limit = 200
+"set foldmethod=indent   
+"set foldnestmax=10
+""set nofoldenable
+"set foldlevel=2
+"
+""highlight current line in git
+"let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_linenrs = 1
+"set signcolumn=yes
+"highlight! link SignColumn LineNr
+
+let g:gitgutter_set_sign_backgrounds = 1
 "augroup KeepCentered
   "autocmd!
   "autocmd CursorMoved * normal! zz
 "augroup END
 
 nmap <silent> K :call CocAction('doHover', 'float') <CR>
+
+"nmap ghs <Plug>(GitGutterStageHunk)
+nmap <leader>gu <Plug>(GitGutterUndoHunk)
 
 "noremap <silent><C-b> :NERDTreeToggle<CR>
 "noremap <silent><C-w> :NERDTreeFind<CR> 
@@ -294,7 +350,9 @@ noremap <silent>fd :CocCommand prettier.formatFile<cr>
 noremap <silent>ff :Prettier<cr> 
 noremap <silent>fs :CocCommand eslint.executeAutofix<cr> 
 nmap <leader>f :CocCommand prettier.formatFile<cr> 
-noremap <silent>fr :Rufo<cr>
+"noremap <silent>fr :Rufo<cr>
+noremap <silent>fr :RuboCop<cr>
+
 noremap <silent>L <end>
 noremap <silent>H <home>
 noremap <silent>tt ea
@@ -313,10 +371,8 @@ vnoremap ii i(
 "VISUAL maps
 vmap ;; <plug>NERDCommenterToggle
 vnoremap <C-c> "+y
-
-
-
-"Plugins and others confing
+nnoremap <leader>cp "%pV"+yV
+"/home/userlifex/.vimrc
 
 "let g:rufo_auto_formatting = 1
 
@@ -343,8 +399,9 @@ autocmd FileType scss setl iskeyword+=@-@
 autocmd BufNewFile,BufRead *.html.erb set filetype=html
 "this allow emmet to edit erb files
 
+let $FZF_DEFAULT_OPTS = '--layout=reverse'
 "let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
-command! -bang -nargs=* Rg
+"command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
@@ -352,9 +409,22 @@ command! -bang -nargs=* Rg
 let g:use_emmet_complete_tag = 1
 let g:user_emmet_settings = {
 \  "emmet.includeLanguages": {
-\   "html.erb": "html"
+\   "html.erb": "html",
+\   "javascript": {
+\       "extends": "jsx" 
+\   },
 \  }
 \ }
+
+let g:mta_filetypes = {
+\ 'html' : 1,
+\ 'xhtml' : 1,
+\ 'xml' : 1,
+\ 'jinja' : 1,
+\ 'javascript.jsx': 1, 
+\ }
+let g:vim_jsx_pretty_highlight_close_tag=1
+let g:vim_jsx_pretty_colorful_config=1
 
 let g:kite_supported_languages = []
 let g:airline_poweline_fonts = 1
@@ -438,3 +508,5 @@ let g:LanguageClient_serverCommands = {
 
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 "highlight ctermbg=NONE
+"
+" Example config in VimScript
