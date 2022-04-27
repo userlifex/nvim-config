@@ -1,7 +1,10 @@
+" ===> init vim <===
+
 "let &packpath=&runtimepath
 "let &packpath=&runtimepath
 "source ~/.vimrc
-
+" 
+" ===> EDITOR SETTINGS <===
 set nocompatible 
 set number
 set mouse=a
@@ -17,10 +20,11 @@ set hidden
 "set relativenumber
 "set exrc
 "set nohlsearch
-set scrolloff=12
+set scrolloff=16
 set completeopt=menuone,noinsert,noselect
 set path+=**
 set wildmenu
+set autoread
 set wildignore+=**/node_modules/**
 set wildignore+=node_modules/**
 set wildignore+=node_modules/**/*
@@ -46,6 +50,20 @@ filetype plugin indent on
 filetype on
 filetype indent on
 
+"highlight Normal guibg=NONE
+highlight Normal ctermbg=NONE
+
+let mapleader=" "
+set cursorline
+
+hi cursorline cterm=none term=none
+autocmd WinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
+"highlight CursorLine guibg=#303000 ctermbg=234
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+
+" ===> PLUGINS INSTALLATION <===
+"
 call plug#begin('~/.vim/plugged/')
 " post install (yarn install | npm install) then load plugin only for editing supported files
 " THEMES 
@@ -69,7 +87,7 @@ Plug 'gregsexton/MatchTag'
 "Navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
+Plug 'styled-components/vim-styled-components'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -169,25 +187,23 @@ Plug 'udalov/kotlin-vim'
 
 "jsx
 Plug 'maxmellon/vim-jsx-pretty'
+
+Plug 'github/copilot.vim'
 call plug#end()
 
+
+" CONFIG FOR PLUGINS
+
+" ===> PLUGINS CONFIG <===
 "let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
 
 
+"for python
+let g:python3_host_prog = "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3"
 let g:material_terminal_italics = 1
 let g:material_theme_style = 'darker'
-"colorscheme material
-"colorscheme torte
-"colorscheme material 
-"colorscheme gruvbox
-"colorscheme onehalfdark
-"colorscheme molokai
-"colorscheme onehalfdark
-colorscheme dracula
-"colorscheme onehalflight
 "let g:molokai_original = 1
-let g:rehash256 = 1
-highlight Normal guibg=none;
+"let g:rehash256 = 1
 
 let g:tokyonight_style = "night"
 let g:tokyonight_italic_functions = 1
@@ -200,11 +216,18 @@ let g:tokyonight_colors = {
 \ }
 let g:tokyonight_terminal_colors = 1	
 " Load the colorscheme
-colorscheme tokyonight
-
+"colorscheme tokyonight
+"colorscheme material
+"colorscheme torte
+"colorscheme material 
+"colorscheme gruvbox
+colorscheme onehalfdark
+"colorscheme molokai
+"colorscheme onedark
+"colorscheme dracula
+"colorscheme onehalflight
 "Remap keys
-let mapleader=" "
-
+"
 
 
 let g:NERDTreeFileExtensionHighlightFullName = 1
@@ -215,18 +238,26 @@ let g:NERDTreePatternMatchHighlightFullName = 1
 let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
 let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
  "Vim
-"let g:indentLine_color_term = 239
+let g:indentLine_color_term = 239
 
 let g:indentLine_char = '|'
+
+" ============================================================================================================
+
+" MAPINGS 
+
+" ===> MAPINGS <===
+
 "INSERT maps
 inoremap jj <ESC>
 inoremap <C-j> <down>
 inoremap <C-k> <up>
-inoremap <C-f> <end>
-inoremap <C-b> <Home>
 inoremap <C-l> <right>
 "inoremap <C-f> <Left>
 inoremap <C-d> <Delete>
+inoremap <C-f> <esc>:Rg<cr>
+nnoremap <C-p> <esc><cmd>lua require('telescope.builtin').git_files()<cr>
+nnoremap <C-e> <esc><cmd>lua require('telescope.builtin').buffers()<cr>
 inoremap <silent><C-o> <End><CR>
 
 inoremap <silent>;; <end>;<End>
@@ -250,9 +281,12 @@ nmap <silent>qq :q<CR>
 nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.vimrc<cr>
 nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <leader>o :call NERDTreeToggleAndRefresh()<CR><c-w>t
-nnoremap <c-y> :NERDTreeFind<CR>
+nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
+nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
+nnoremap <leader>o :call NERDTreeToggleAndRefresh()<CR>
+nnoremap <silent>gk :cal NerdFind()<CR>
 
+nnoremap <C-f> :Rg<cr>
 " COC code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -262,55 +296,20 @@ nmap <silent> gr <Plug>(coc-references)
 " Using Lua functions
 "nnoremap <c-p> <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
-nnoremap <tab> <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <c-e> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
-
+nnoremap <silent>, <c-w><
+nnoremap <silent>. <c-w>>
 nmap <Leader>co :wa<space>!code<cr>
 "this works with fzf
-
+nmap <Leader>w :set wrap<cr>
+nmap <Leader>n :set nowrap<cr>
 "path of the current file
-
-
-function NERDTreeToggleAndRefresh()
-  if g:NERDTree.IsOpen()
-    :NERDTreeToggle
-  else 
-    :NERDTreeFind
-  :NERDTreeRefreshRoot
-endif
-endfunction	      		       
-
-set cursorline
-hi cursorline cterm=none term=none
-autocmd WinEnter * setlocal cursorline
-autocmd WinLeave * setlocal nocursorline
-"highlight CursorLine guibg=#303000 ctermbg=234
-
-
-"folding
-"let g:ruby_fold_lines_limit = 200
-"set foldmethod=indent   
-"set foldnestmax=10
-""set nofoldenable
-"set foldlevel=2
-"
-""highlight current line in git
-"let g:gitgutter_highlight_lines = 1
-let g:gitgutter_highlight_linenrs = 1
-"set signcolumn=yes
-"highlight! link SignColumn LineNr
-
-let g:gitgutter_set_sign_backgrounds = 1
-"augroup KeepCentered
-  "autocmd!
-  "autocmd CursorMoved * normal! zz
-"augroup END
 
 nmap <silent> K :call CocAction('doHover', 'float') <CR>
 
-"nmap ghs <Plug>(GitGutterStageHunk)
 nmap <leader>gu <Plug>(GitGutterUndoHunk)
 
 "noremap <silent><C-b> :NERDTreeToggle<CR>
@@ -322,7 +321,7 @@ nmap <leader>gu <Plug>(GitGutterUndoHunk)
 "BUFFER CONTROLS
 "noremap <silent>L :bnext<cr>
 "noremap <silent>H :bprevious<cr>
-noremap <silent>ww :bd<cr>
+"noremap <silent>ww :bd<cr>
 noremap <silent><C-o> <C-^>
 "up and down lines
 nnoremap <A-j> :m .+1<CR>==
@@ -335,7 +334,13 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 noremap <silent>C ciw
 noremap <silent>J yyp
 
-noremap <silent>gl ``
+"noremap <silent>gl ``
+
+noremap <silent>gu gg
+noremap <silent>gn G 
+noremap <silent>gg ``
+noremap <silent>go :bp<cr>
+noremap <silent>gl :bn<cr>
 "noremap <leader>o <C-w>t
 "noremap <C-p> :find<space> 
 "noremap <C-p> :GFiles<CR>
@@ -355,8 +360,12 @@ noremap <silent>fr :RuboCop<cr>
 
 noremap <silent>L <end>
 noremap <silent>H <home>
-noremap <silent>tt ea
-
+"noremap <silent>tt ea
+"
+"Navigation
+noremap <silent>? {
+noremap <silent>/ }
+noremap <silent>w /
 " these "Ctrlmappings" work well when Caps Lock is mapped to Ctrl
 "nmap <silent>tn :TestNearest<CR>
 nmap <silent>tf :w<cr>:TestFile<CR>
@@ -373,6 +382,38 @@ vmap ;; <plug>NERDCommenterToggle
 vnoremap <C-c> "+y
 nnoremap <leader>cp "%pV"+yV
 "/home/userlifex/.vimrc
+" ===================================================================================
+
+" ===> MISC <===
+function NerdFind()
+  :NERDTreeFind
+  :NERDTreeRefreshRoot
+endfunction
+
+function NERDTreeToggleAndRefresh()
+  if g:NERDTree.IsOpen()
+    :NERDTreeToggle
+  else 
+    :NERDTreeFind
+  :NERDTreeRefreshRoot
+endif
+endfunction	      		       
+
+
+"folding
+"let g:ruby_fold_lines_limit = 200
+"set foldmethod=indent   
+"set foldnestmax=10
+""set nofoldenable
+"set foldlevel=2
+"
+"highlight current line in git
+"let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_linenrs = 1
+"set signcolumn=yes
+"highlight! link SignColumn LineNr
+
+let g:gitgutter_set_sign_backgrounds = 1
 
 "let g:rufo_auto_formatting = 1
 
@@ -432,7 +473,7 @@ let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclu
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:NERDTreeIgnore = ['^node_modules$']
 let NERDTreeShowHidden=1
-let g:airline_theme='base16_monokai'
+"let g:airline_theme='base16_monokai'
 let g:NERDTreeWinPos = "right"
 let g:javascript_plugin_jsdoc = 1
 "qq
@@ -445,17 +486,12 @@ augroup JsonToJsonc
       autocmd! FileType json set filetype=jsonc
     augroup END
 
-"let g:ale_sign_error = '❌'
-"let g:ale_sign_warning = '⚠️'
-
-"let g:ale_fix_on_save = 1
-"
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 vnoremap ( d<esc>i(
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -467,22 +503,16 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 let g:NERDTreeGitStatusWithFlags = 1
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = " "
 let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+let g:NERDTreeWinSize=38
 
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
  exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
  exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
-filetype plugin indent on
-"FZF CON qG
-" This is the default extra key bindings
-"let g:fzf_action = {
-  "\ 'ctrl-t': 'tab split',
-  "\ 'ctrl-x': 'split',
-  "\ 'ctrl-v': 'vsplit' }
 
-"let $FZF_DEFAULT_COMMAND='rg --files --hidden'
-" An action can be a reference to a function that processes selected lines
+filetype plugin indent on
+
 function! s:build_quickfix_list(lines)
   call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
   copen
@@ -498,15 +528,3 @@ let g:LanguageClient_serverCommands = {
     \ 'python': ['/usr/local/bin/pyls'],
     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
     \ }
-
-" note that if you are using Plug mapping you should not use `noremap` mappings.
-"nmap <F5> <Plug>(lcn-menu)
-" Or map each action separately
-"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
-"highlight ctermbg=NONE
-"
-" Example config in VimScript
