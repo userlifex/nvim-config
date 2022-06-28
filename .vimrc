@@ -34,6 +34,7 @@ set termguicolors
 set nobackup
 set nowritebackup
 
+"set noshowmatch 
 " Better display for messages
 "set cmdheight=2
 
@@ -46,6 +47,11 @@ set shortmess+=c
 " always show signcolumns
 set signcolumn=yes
 
+set hlsearch
+set hlsearch
+set infercase
+"set insensitive
+
 filetype plugin indent on
 filetype on
 filetype indent on
@@ -56,12 +62,15 @@ highlight Normal ctermbg=NONE
 let mapleader=" "
 set cursorline
 
+set formatoptions-=cro " no add comment after linebreak
+autocmd FileType * set formatoptions-=cro
+
+
 hi cursorline cterm=none term=none
 autocmd WinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
 "highlight CursorLine guibg=#303000 ctermbg=234
-highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
-
+"highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 " ===> PLUGINS INSTALLATION <===
 "
 call plug#begin('~/.vim/plugged/')
@@ -189,7 +198,27 @@ Plug 'udalov/kotlin-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 
 Plug 'github/copilot.vim'
+
+
+"for imports in js
+
+"Plug 'ludovicchabant/vim-gutentags'
+"Plug 'kristijanhusak/vim-js-file-import', {'do': 'npm install'}
+
+" for snippets
+Plug 'honza/vim-snippets'
+
+" vim language server protocol
+Plug 'prabirshrestha/vim-lsp'
+
+" git
+Plug 'tpope/vim-fugitive'
+
+
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
+
 
 
 " CONFIG FOR PLUGINS
@@ -201,7 +230,6 @@ call plug#end()
 "for python
 let g:python3_host_prog = "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3"
 let g:material_terminal_italics = 1
-let g:material_theme_style = 'darker'
 "let g:molokai_original = 1
 "let g:rehash256 = 1
 
@@ -221,22 +249,61 @@ let g:tokyonight_terminal_colors = 1
 "colorscheme torte
 "colorscheme material 
 "colorscheme gruvbox
-colorscheme onehalfdark
+"colorscheme onehalfdark
 "colorscheme molokai
 "colorscheme onedark
-"colorscheme dracula
+colorscheme dracula
 "colorscheme onehalflight
+"let g:material_theme_style = 'darker'
 "Remap keys
 "
 
 
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
+"Nerd Config
+let g:airline_powerline_fonts = 1
+
+let g:NERDTreeIgnore = ['^node_modules$']
+let NERDTreeShowHidden=1
+let g:NERDTreeWinPos = "right"
+let NERDTreeShowHidden=1
+let NERDTreeQuitOnOpen=1
+let NERDTreeAutoDeleteBuffer=1
+let NERDTreeMinimalUI=1
+let NERDTreeDirArrows=1
+let NERDTreeShowLineNumbers=1
+let g:NERDTreeGitStatusWithFlags = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:NERDTreeGitStatusNodeColorization = 1
+let g:NERDTreeColorMapCustom = {
+      \ "Staged"    : "#0ee375",  
+      \ "Modified"  : "#d9bf91",  
+      \ "Renamed"   : "#51C9FC",  
+      \ "Untracked" : "#FCE77C",  
+      \ "Unmerged"  : "#FC51E6",  
+      \ "Dirty"     : "#FFBD61",  
+      \ "Clean"     : "#87939A",   
+      \ "Ignored"   : "#808080"   
+      \ }                         
+
+"let g:NERDTreeGitStatusWithFlags = 1
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = " "
+let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+let g:NERDTreeWinSize=38
+
+let g:NERDCreateDefaultMappings = 0
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+ exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+ exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+endfunction
+
+"let g:NERDTreeFileExtensionHighlightFullName = 1
+"let g:NERDTreeExactMatchHighlightFullName = 1
+"let g:NERDTreePatternMatchHighlightFullName = 1
 
 
-let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+"let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+"let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
  "Vim
 let g:indentLine_color_term = 239
 
@@ -255,9 +322,13 @@ inoremap <C-k> <up>
 inoremap <C-l> <right>
 "inoremap <C-f> <Left>
 inoremap <C-d> <Delete>
+
+
+" ===> MAPINGS <===
 inoremap <C-f> <esc>:Rg<cr>
 nnoremap <C-p> <esc><cmd>lua require('telescope.builtin').git_files()<cr>
 nnoremap <C-e> <esc><cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>lr <esc><cmd>lua require('telescope.builtin').oldfiles()<cr>
 inoremap <silent><C-o> <End><CR>
 
 inoremap <silent>;; <end>;<End>
@@ -270,11 +341,13 @@ imap <silent><A-l> <End>
 imap <silent><A-h> <Left>
 imap <silent><C-v> <C-r>*
 inoremap %%<cr> <%  %><left><left><left><left>
-
+inoremap <silent><expr> <C-k> coc#refresh()
 "iunmap <c-indent>
 "inoremap <silent><C><tab> <esc><esc>:b<space>
+
+
+
 "NORMAL mapjis
-nmap <Leader>s <Plug>(easymotion-s2)
 nmap <Leader>nd :w !node<CR>
 nmap <Leader>ns :w !tsc<CR>
 nmap <silent>qq :q<CR>
@@ -282,9 +355,8 @@ nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.vimrc<cr>
 nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
 nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <leader>o :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <silent>gk :cal NerdFind()<CR>
+"nnoremap <silent>cc :NvimTreeToggle<CR>
+nnoremap <silent>gk :call NerdFind()<CR>
 
 nnoremap <C-f> :Rg<cr>
 " COC code navigation.
@@ -292,6 +364,16 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gf <Nop>
+nmap <silent> gvd :vsplit<CR><Plug>(coc-definition)
+
+
+"import
+nmap <C-i> <Plug>(JsFileImport)
+nmap <C-u> <Plug>(PromptJsFileImport)
 
 " Using Lua functions
 "nnoremap <c-p> <cmd>lua require('telescope.builtin').find_files()<cr>
@@ -308,7 +390,24 @@ nmap <Leader>w :set wrap<cr>
 nmap <Leader>n :set nowrap<cr>
 "path of the current file
 
-nmap <silent> K :call CocAction('doHover', 'float') <CR>
+nmap <silent>sk :call CocAction('doHover', 'float') <CR>
+
+" Use K to show documentation in preview window
+nnoremap <silent>K :call <SID>show_documentation()<CR>
+
+" use > to search between brackets
+nnoremap <leader>? % 
+
+
+" multivisual remap
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
 nmap <leader>gu <Plug>(GitGutterUndoHunk)
 
@@ -323,11 +422,11 @@ nmap <leader>gu <Plug>(GitGutterUndoHunk)
 "noremap <silent>H :bprevious<cr>
 "noremap <silent>ww :bd<cr>
 noremap <silent><C-o> <C-^>
+
 "up and down lines
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
+inoremap <c-n> <Esc>:m .+1<CR>==gi
+inoremap <c-p> <Esc>:m .-2<CR>==gi
+
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
@@ -365,7 +464,7 @@ noremap <silent>H <home>
 "Navigation
 noremap <silent>? {
 noremap <silent>/ }
-noremap <silent>w /
+noremap <leader>/ /
 " these "Ctrlmappings" work well when Caps Lock is mapped to Ctrl
 "nmap <silent>tn :TestNearest<CR>
 nmap <silent>tf :w<cr>:TestFile<CR>
@@ -380,6 +479,14 @@ vnoremap ii i(
 "VISUAL maps
 vmap ;; <plug>NERDCommenterToggle
 vnoremap <C-c> "+y
+
+" leader maps
+nmap <leader>pi :PlugInstall<cr>
+nnoremap <leader>cs :CocConfig<cr>
+
+nmap <leader>ls :CocList snippets<cr>
+
+
 nnoremap <leader>cp "%pV"+yV
 "/home/userlifex/.vimrc
 " ===================================================================================
@@ -423,16 +530,31 @@ let g:coc_global_extensions = [
  \'coc-vetur',
  \'coc-emmet',
  \'coc-css',
- \'coc-angular',
  \'coc-eslint',
  \'coc-prettier',
  \'coc-json',
  \'coc-html-css-support',
  \'coc-jest',
- \'coc-tabnine',
  \'coc-prisma',
+ \'coc-tabnine',
  \'coc-solargraph',
  \]
+"let g:coc_global_extensions = [
+ "\'coc-snippets',
+ "\'coc-tsserver',
+ "\'coc-vetur',
+ "\'coc-emmet',
+ "\'coc-css',
+ "\'coc-angular',
+ "\'coc-eslint',
+ "\'coc-prettier',
+ "\'coc-json',
+ "\'coc-html-css-support',
+ "\'coc-jest',
+ "\'coc-tabnine',
+ "\'coc-prisma',
+ "\'coc-solargraph',
+ "\]
 
 
 autocmd FileType scss setl iskeyword+=@-@
@@ -471,17 +593,16 @@ let g:kite_supported_languages = []
 let g:airline_poweline_fonts = 1
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
-let g:NERDTreeIgnore = ['^node_modules$']
-let NERDTreeShowHidden=1
-"let g:airline_theme='base16_monokai'
-let g:NERDTreeWinPos = "right"
+
 let g:javascript_plugin_jsdoc = 1
+let g:airline_theme='base16_monokai'
 "qq
 "let g:airline_theme = 'material'
 autocmd Filetype json
   \ let g:indentLine_setConceal = 0 |
   \ let g:vim_json_syntax_conceal = 0
 "let g:vim_json_conceal=0
+
 augroup JsonToJsonc
       autocmd! FileType json set filetype=jsonc
     augroup END
@@ -491,7 +612,7 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 vnoremap ( d<esc>i(
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -500,15 +621,6 @@ endfunction
 
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-let g:NERDTreeGitStatusWithFlags = 1
-let g:WebDevIconsNerdTreeBeforeGlyphPadding = " "
-let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
-let g:NERDTreeWinSize=38
-
-function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
- exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
- exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-endfunction
 
 
 filetype plugin indent on
@@ -528,3 +640,12 @@ let g:LanguageClient_serverCommands = {
     \ 'python': ['/usr/local/bin/pyls'],
     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
     \ }
+
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+"hi Normal ctermfg=white ctermbg=black
+
