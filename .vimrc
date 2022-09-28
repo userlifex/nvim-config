@@ -73,12 +73,11 @@ autocmd WinLeave * setlocal nocursorline
 "highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 " ===> PLUGINS INSTALLATION <===
 "
-call plug#begin('~/.vim/plugged/')
+call plug#begin('~/vimfiles/plugged')
 " post install (yarn install | npm install) then load plugin only for editing supported files
 " THEMES 
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'larsbs/vimterial_dark'
 Plug 'tomasr/molokai'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
@@ -94,16 +93,18 @@ Plug 'neoclide/jsonc.vim'
 Plug 'gregsexton/MatchTag'
 
 "Navigation
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'junegunn/fzf.vim'
 Plug 'styled-components/vim-styled-components'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
+"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'kyazdani42/nvim-tree.lua'
+
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-gitgutter'
 Plug 'jiangmiao/auto-pairs'
@@ -189,15 +190,15 @@ Plug 'f-person/git-blame.nvim'
 Plug 'mileszs/ack.vim'
 
 " stats
-Plug 'wakatime/vim-wakatime'
+"Plug 'wakatime/vim-wakatime'
 
 "kotlin
-Plug 'udalov/kotlin-vim'
+"Plug 'udalov/kotlin-vim'
 
 "jsx
 Plug 'maxmellon/vim-jsx-pretty'
 
-Plug 'github/copilot.vim'
+"Plug 'github/copilot.vim'
 
 
 "for imports in js
@@ -206,7 +207,7 @@ Plug 'github/copilot.vim'
 "Plug 'kristijanhusak/vim-js-file-import', {'do': 'npm install'}
 
 " for snippets
-Plug 'honza/vim-snippets'
+"Plug 'honza/vim-snippets'
 
 " vim language server protocol
 Plug 'prabirshrestha/vim-lsp'
@@ -228,7 +229,7 @@ call plug#end()
 
 
 "for python
-let g:python3_host_prog = "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3"
+let g:python3_host_prog = 'C:\Users\junio\AppData\Local\Programs\Python\Python310'
 let g:material_terminal_italics = 1
 "let g:molokai_original = 1
 "let g:rehash256 = 1
@@ -353,9 +354,12 @@ nmap <Leader>ns :w !tsc<CR>
 nmap <silent>qq :q<CR>
 nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.vimrc<cr>
-nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
-"nnoremap <silent>cc :NvimTreeToggle<CR>
+"nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
+"nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
+nnoremap <leader><space> :NvimTreeToggle<CR>
+nnoremap <leader>cc :NvimTreeToggle<CR>
+"nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
+nnoremap <silent>cc :NvimTreeToggle<CR>
 nnoremap <silent>gk :call NerdFind()<CR>
 
 nnoremap <C-f> :Rg<cr>
@@ -376,8 +380,8 @@ nmap <C-i> <Plug>(JsFileImport)
 nmap <C-u> <Plug>(PromptJsFileImport)
 
 " Using Lua functions
-"nnoremap <c-p> <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
+nnoremap <c-p> <cmd>lua require('telescope.builtin').find_files()<cr>
+"nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
 nnoremap <c-e> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
@@ -424,8 +428,8 @@ nmap <leader>gu <Plug>(GitGutterUndoHunk)
 noremap <silent><C-o> <C-^>
 
 "up and down lines
-inoremap <c-n> <Esc>:m .+1<CR>==gi
-inoremap <c-p> <Esc>:m .-2<CR>==gi
+"inoremap <c-n> <Esc>:m .+1<CR>==gi
+"inoremap <c-p> <Esc>:m .-2<CR>==gi
 
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
@@ -484,7 +488,7 @@ vnoremap <C-c> "+y
 nmap <leader>pi :PlugInstall<cr>
 nnoremap <leader>cs :CocConfig<cr>
 
-nmap <leader>ls :CocList snippets<cr>
+"nmap <leader>ls :CocList snippets<cr>
 
 
 nnoremap <leader>cp "%pV"+yV
@@ -525,7 +529,6 @@ let g:gitgutter_set_sign_backgrounds = 1
 "let g:rufo_auto_formatting = 1
 
 let g:coc_global_extensions = [
- \'coc-snippets',
  \'coc-tsserver',
  \'coc-vetur',
  \'coc-emmet',
@@ -608,18 +611,41 @@ augroup JsonToJsonc
     augroup END
 
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-vnoremap ( d<esc>i(
-function! s:check_back_space() abort
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" :
+      "\ <SID>check_back_space() ? "\<cr>" :
+      "\ coc#refresh()
+
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"vnoremap ( d<esc>i(
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 
 
@@ -648,4 +674,13 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>qf  <Plug>(coc-fix-current)
 
 "hi Normal ctermfg=white ctermbg=black
-
+lua << EOF
+  require('telescope').setup{  defaults = { file_ignore_patterns = { "node_modules", ".git", "dist" }} }
+  require("nvim-tree").setup({
+    open_on_setup = true,
+    prefer_startup_root = true,
+    view = {
+        side = "right"
+      }
+  })
+EOF
