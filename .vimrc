@@ -17,18 +17,18 @@ set showmatch
 set et
 set sw=2
 set hidden
-"set relativenumber
+set relativenumber
 "set exrc
 "set nohlsearch
 set scrolloff=16
 set completeopt=menuone,noinsert,noselect
 set path+=**
-set wildmenu
-set autoread
+"set wildmenu
+"set autoread
 set wildignore+=**/node_modules/**
 set wildignore+=node_modules/**
 set wildignore+=node_modules/**/*
-set termguicolors 
+"set termguicolors 
     
 " Some servers have issues with backup files, see #649
 set nobackup
@@ -57,7 +57,7 @@ filetype on
 filetype indent on
 
 "highlight Normal guibg=NONE
-highlight Normal ctermbg=NONE
+"highlight Normal ctermbg=NONE
 
 let mapleader=" "
 set cursorline
@@ -66,9 +66,9 @@ set formatoptions-=cro " no add comment after linebreak
 autocmd FileType * set formatoptions-=cro
 
 
-hi cursorline cterm=none term=none
-autocmd WinEnter * setlocal cursorline
-autocmd WinLeave * setlocal nocursorline
+"hi cursorline cterm=none term=none
+"autocmd WinEnter * setlocal cursorline
+"autocmd WinLeave * setlocal nocursorline
 "highlight CursorLine guibg=#303000 ctermbg=234
 "highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 " ===> PLUGINS INSTALLATION <===
@@ -93,8 +93,9 @@ Plug 'neoclide/jsonc.vim'
 Plug 'gregsexton/MatchTag'
 
 "Navigation
-"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-"Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 Plug 'styled-components/vim-styled-components'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -117,7 +118,6 @@ Plug 'sonph/onehalf', { 'rtp': 'vim' }
 
 " IDE
 " Move easyly cross the code with looking for words
-Plug 'scrooloose/nerdtree'
 
 " Move in the subwindows with ctrl plus hjkl
 Plug 'christoomey/vim-tmux-navigator'
@@ -218,6 +218,11 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
+
+"Plug 'duane9/nvim-rg'
+
+"terraform 
+Plug 'hashivim/vim-terraform'
 call plug#end()
 
 
@@ -229,7 +234,7 @@ call plug#end()
 
 
 "for python
-let g:python3_host_prog = 'C:\Users\junio\AppData\Local\Programs\Python\Python310'
+"let g:python3_host_prog = 'C:\Users\junio\AppData\Local\Programs\Python\Python310'
 let g:material_terminal_italics = 1
 "let g:molokai_original = 1
 "let g:rehash256 = 1
@@ -249,11 +254,11 @@ let g:tokyonight_terminal_colors = 1
 "colorscheme material
 "colorscheme torte
 "colorscheme material 
-"colorscheme gruvbox
+colorscheme gruvbox
 "colorscheme onehalfdark
 "colorscheme molokai
 "colorscheme onedark
-colorscheme dracula
+"colorscheme dracula
 "colorscheme onehalflight
 "let g:material_theme_style = 'darker'
 "Remap keys
@@ -262,50 +267,9 @@ colorscheme dracula
 
 "Nerd Config
 let g:airline_powerline_fonts = 1
-
-let g:NERDTreeIgnore = ['^node_modules$']
-let NERDTreeShowHidden=1
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=1
-let NERDTreeQuitOnOpen=1
-let NERDTreeAutoDeleteBuffer=1
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows=1
-let NERDTreeShowLineNumbers=1
-let g:NERDTreeGitStatusWithFlags = 1
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:NERDTreeGitStatusNodeColorization = 1
-let g:NERDTreeColorMapCustom = {
-      \ "Staged"    : "#0ee375",  
-      \ "Modified"  : "#d9bf91",  
-      \ "Renamed"   : "#51C9FC",  
-      \ "Untracked" : "#FCE77C",  
-      \ "Unmerged"  : "#FC51E6",  
-      \ "Dirty"     : "#FFBD61",  
-      \ "Clean"     : "#87939A",   
-      \ "Ignored"   : "#808080"   
-      \ }                         
-
-"let g:NERDTreeGitStatusWithFlags = 1
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = " "
 let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
-let g:NERDTreeWinSize=38
 
-let g:NERDCreateDefaultMappings = 0
-" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
- exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
- exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-endfunction
-
-"let g:NERDTreeFileExtensionHighlightFullName = 1
-"let g:NERDTreeExactMatchHighlightFullName = 1
-"let g:NERDTreePatternMatchHighlightFullName = 1
-
-
-"let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-"let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
- "Vim
 let g:indentLine_color_term = 239
 
 let g:indentLine_char = '|'
@@ -352,14 +316,18 @@ inoremap <silent><expr> <C-k> coc#refresh()
 nmap <Leader>nd :w !node<CR>
 nmap <Leader>ns :w !tsc<CR>
 nmap <silent>qq :q<CR>
+nmap <silent>qa :qa<CR>
 nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.vimrc<cr>
 "nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
 "nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <leader><space> :NvimTreeToggle<CR>
+"nnoremap <leader><space> :NvimTreeToggle<CR>
+nnoremap <silent>tt :NvimTreeToggle<CR>
+nnoremap <silent>tf :NvimFindFile<CR>
+
 nnoremap <leader>cc :NvimTreeToggle<CR>
 "nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
-nnoremap <silent>cc :NvimTreeToggle<CR>
+"nnoremap <silent>cc :NvimTreeToggle<CR>
 nnoremap <silent>gk :call NerdFind()<CR>
 
 nnoremap <C-f> :Rg<cr>
@@ -373,8 +341,12 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gf <Nop>
 nmap <silent> gvd :vsplit<CR><Plug>(coc-definition)
+nmap <leader>d :vsplit<CR><Plug>(coc-definition)
 
 
+"GIT MAPS
+
+nmap <leader>g :Gvdiffsplit<cr>
 "import
 nmap <C-i> <Plug>(JsFileImport)
 nmap <C-u> <Plug>(PromptJsFileImport)
@@ -386,12 +358,17 @@ nnoremap <c-e> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
-nnoremap <silent>, <c-w><
-nnoremap <silent>. <c-w>>
+nnoremap <leader>h <c-w><
+nnoremap <leader>j <c-w>>
+nnoremap <leader>zi <c-w>30>
+nnoremap <leader>zo <c-w>30<
 nmap <Leader>co :wa<space>!code<cr>
 "this works with fzf
 nmap <Leader>w :set wrap<cr>
-nmap <Leader>n :set nowrap<cr>
+nmap <Leader>nw :set nowrap<cr>
+
+nmap <Leader>rn :set rnu<cr>
+nmap <Leader>nrn :set rnu!<cr>
 "path of the current file
 
 nmap <silent>sk :call CocAction('doHover', 'float') <CR>
@@ -399,8 +376,6 @@ nmap <silent>sk :call CocAction('doHover', 'float') <CR>
 " Use K to show documentation in preview window
 nnoremap <silent>K :call <SID>show_documentation()<CR>
 
-" use > to search between brackets
-nnoremap <leader>? % 
 
 
 " multivisual remap
@@ -466,13 +441,14 @@ noremap <silent>H <home>
 "noremap <silent>tt ea
 "
 "Navigation
-noremap <silent>? {
-noremap <silent>/ }
-noremap <leader>/ /
+noremap <silent>? 12k
+noremap <silent>/ 12j
+noremap <leader>/ /\c
+noremap <leader>? /
 " these "Ctrlmappings" work well when Caps Lock is mapped to Ctrl
 "nmap <silent>tn :TestNearest<CR>
-nmap <silent>tf :w<cr>:TestFile<CR>
-nmap <silent>ts :wall<cr>:TestSuite<CR>
+nmap <leader>tf :w<cr>:TestFile<CR>
+nmap <leader>ts :wall<cr>:TestSuite<CR>
 nnoremap <silent>cii ci(
 "nmap <silent>tl :TestLast<CR>
 "nmap <silent>tg :TestVisit<CR>
@@ -566,7 +542,7 @@ autocmd BufNewFile,BufRead *.html.erb set filetype=html
 "this allow emmet to edit erb files
 
 let $FZF_DEFAULT_OPTS = '--layout=reverse'
-"let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
 "command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
@@ -647,10 +623,6 @@ endif
 
 "inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-
-
-filetype plugin indent on
-
 function! s:build_quickfix_list(lines)
   call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
   copen
@@ -675,12 +647,30 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 "hi Normal ctermfg=white ctermbg=black
 lua << EOF
-  require('telescope').setup{  defaults = { file_ignore_patterns = { "node_modules", ".git", "dist" }} }
-  require("nvim-tree").setup({
+require('telescope').setup({  
+  defaults = { 
+    path_display = { "smart" }, 
+    file_ignore_patterns = { "node_modules", ".git", "dist" },
+    layout_config = {
+      width= 0.95
+      }
+    } 
+  })  
+require("nvim-tree").setup({
     open_on_setup = true,
     prefer_startup_root = true,
     view = {
-        side = "right"
-      }
+      side = "right",
+      width=60
+    },
+    update_focused_file = {
+      enable = true,
+      update_cwd = true, -- update the current directory
+    },
   })
 EOF
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
