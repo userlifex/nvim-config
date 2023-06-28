@@ -163,11 +163,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 export EDITOR=/usr/local/bin/nvim
 export VISUAL=/usr/local/bin/nvim
-export BLAZEMETER_TOKEN=5ca531b6c148576f009886a3:e603c97f42faef573d8bf9cc8c446097af5e79d7b19e4bab2d59ae7372321624dbe0f57f
-export UL_DEV_CLIENT_ID=32b6qhj0oilnu0t6ueen1e900v
-export UL_DEV_CLIENT_SECRET=1tsed3u3bh9jbfbpmgdtht7da2kqj9d9s55mideib9sotdusn39t
-export UL_STG_CLIENT_ID=32b6qhj0oilnu0t6ueen1e900v
-export UL_STG_CLIENT_SECRET=1tsed3u3bh9jbfbpmgdtht7da2kqj9d9s55mideib9sotdusn39t
+
 
 #TODO: search what is this cred
 #userlist/dev/userlistdb/master
