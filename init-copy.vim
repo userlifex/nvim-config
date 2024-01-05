@@ -1,7 +1,78 @@
+" ===> init vim <===
+
+"let &packpath=&runtimepath
+"let &packpath=&runtimepath
+"source ~/.vimrc
+" 
+" ===> EDITOR SETTINGS <===
+set nocompatible 
+set number
+set mouse=a
+"set numberwidth=1
+set clipboard=unnamed
+syntax on
+set showcmd
+set ruler
+set showmatch
+set et
+set sw=2
+set hidden
+set relativenumber
+"set exrc
+"set nohlsearch
+set scrolloff=16
+set completeopt=menuone,noinsert,noselect
+set path+=**
+"set wildmenu
+"set autoread
+set wildignore+=**/node_modules/**
+set wildignore+=node_modules/**
+set wildignore+=node_modules/**/*
+"set termguicolors 
+    
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+"set noshowmatch 
+" Better display for messages
+"set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
+
+set hlsearch
+set hlsearch
+set infercase
+"set insensitive
+
+filetype plugin indent on
+filetype on
+filetype indent on
+
+"highlight Normal guibg=NONE
+"highlight Normal ctermbg=NONE
+
+let mapleader=" "
+set cursorline
+
+set formatoptions-=cro " no add comment after linebreak
+autocmd FileType * set formatoptions-=cro
+
+
+"hi cursorline cterm=none term=none
+"autocmd WinEnter * setlocal cursorline
+"autocmd WinLeave * setlocal nocursorline
+"highlight CursorLine guibg=#303000 ctermbg=234
+"highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 " ===> PLUGINS INSTALLATION <===
 "
-source ~/.config/nvim/config.vim
-
 call plug#begin('~/vimfiles/plugged')
 " post install (yarn install | npm install) then load plugin only for editing supported files
 " THEMES 
@@ -212,6 +283,13 @@ let g:indentLine_char = '|'
 " ===> MAPINGS <===
 
 "INSERT maps
+inoremap jj <ESC>
+inoremap <C-j> <down>
+inoremap <C-k> <up>
+inoremap <C-l> <right>
+"inoremap <C-f> <Left>
+inoremap <C-d> <Delete>
+
 
 " ===> MAPINGS <===
 inoremap <C-f> <esc>:Rg<cr>
@@ -220,6 +298,11 @@ nnoremap <C-e> <esc><cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>lr <esc><cmd>lua require('telescope.builtin').oldfiles()<cr>
 inoremap <silent><C-o> <End><CR>
 
+inoremap <silent>;; <end>;<End>
+inoremap <silent>,, <end>,<End>
+
+inoremap <silent><c-h> <Left>
+"inoremap <C-p> <esc>:find 
 inoremap <silent><expr> <c-space> coc#refresh()
 imap <silent><A-l> <End>
 imap <silent><A-h> <Left>
@@ -234,7 +317,9 @@ inoremap <silent><expr> <C-k> coc#refresh()
 "NORMAL mapjis
 nmap <Leader>nd :w !node<CR>
 nmap <Leader>ns :w !tsc<CR>
-
+nmap <silent>qq :q<CR>
+nmap <silent>qa :qa<CR>
+nmap ;; <plug>NERDCommenterToggle
 nmap <Leader>vi :so ~/.config/nvim/init.vim<cr>
 "nnoremap <leader><space> :call NERDTreeToggleAndRefresh()<CR>
 "nnoremap <silent>cc :call NERDTreeToggleAndRefresh()<CR>
@@ -249,6 +334,16 @@ nnoremap <silent>gk :call NerdFind()<CR>
 
 nnoremap <C-f> :Rg<cr>
 " COC code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gf <Nop>
+nmap <silent> gvd :vsplit<CR><Plug>(coc-definition)
+nmap <leader>d :vsplit<CR><Plug>(coc-definition)
 
 
 "GIT MAPS
@@ -265,8 +360,18 @@ nnoremap <c-e> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
+nnoremap <leader>h <c-w><
+nnoremap <leader>j <c-w>>
+nnoremap <leader>zi <c-w>30>
+nnoremap <leader>zo <c-w>30<
 nmap <Leader>co :wa<space>!code<cr>
 "this works with fzf
+nmap <Leader>w :set wrap<cr>
+nmap <Leader>nw :set nowrap<cr>
+
+nmap <Leader>rn :set rnu<cr>
+nmap <Leader>nrn :set rnu!<cr>
+"path of the current file
 
 nmap <silent>sk :call CocAction('doHover', 'float') <CR>
 
@@ -303,19 +408,45 @@ noremap <silent><C-o> <C-^>
 "inoremap <c-n> <Esc>:m .+1<CR>==gi
 "inoremap <c-p> <Esc>:m .-2<CR>==gi
 
-vnoremap <leader>j :m '>+1<CR>gv=gv
-vnoremap <leader>k :m '<-2<CR>gv=gv
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
 
+noremap <silent>C ciw
+noremap <silent>J yyp
 
+"noremap <silent>gl ``
+
+noremap <silent>gu gg
+noremap <silent>gn G 
+noremap <silent>gg ``
+noremap <silent>go :bp<cr>
+noremap <silent>gl :bn<cr>
+"noremap <leader>o <C-w>t
+"noremap <C-p> :find<space> 
+"noremap <C-p> :GFiles<CR>
+"noremap <A-p> :Files<CR>
+"for FZF
+
+noremap <silent>ss :wall<CR>
+"noremap <silent>S :w<CR>
+"noremap <silent><c-l> ^I
+"noremap <silent>ff :Prettier<CR>
 noremap <silent>fd :CocCommand prettier.formatFile<cr> 
 noremap <silent>ff :Prettier<cr> 
 noremap <silent>fs :CocCommand eslint.executeAutofix<cr> 
 nmap <leader>f :CocCommand prettier.formatFile<cr> 
-
+"noremap <silent>fr :Rufo<cr>
 noremap <silent>fr :RuboCop<cr>
 
+noremap <silent>L <end>
+noremap <silent>H <home>
 "noremap <silent>tt ea
 "
+"Navigation
+noremap <silent>? 12k
+noremap <silent>/ 12j
+noremap <leader>/ /\c
+noremap <leader>? /
 " these "Ctrlmappings" work well when Caps Lock is mapped to Ctrl
 "nmap <silent>tn :TestNearest<CR>
 nmap <leader>tf :w<cr>:TestFile<CR>
@@ -328,12 +459,15 @@ nnoremap <silent>cii ci(
 vnoremap ii i(
 "vnoremap <silent>'' S'
 "VISUAL maps
+vmap ;; <plug>NERDCommenterToggle
+vnoremap <C-c> "+y
 
 " leader maps
 nmap <leader>pi :PlugInstall<cr>
 nnoremap <leader>cs :CocConfig<cr>
 
 "nmap <leader>ls :CocList snippets<cr>
+
 
 nnoremap <leader>cp "%pV"+yV
 "/home/userlifex/.vimrc
@@ -355,6 +489,17 @@ endif
 endfunction	      		       
 
 
+set foldmethod=indent
+set foldlevel=2
+set foldclose=all 
+
+"folding
+"let g:ruby_fold_lines_limit = 200
+"set foldmethod=indent   
+"set foldnestmax=10
+""set nofoldenable
+"set foldlevel=2
+"
 "highlight current line in git
 "let g:gitgutter_highlight_lines = 1
 let g:gitgutter_highlight_linenrs = 1
@@ -470,6 +615,19 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" :
+      "\ <SID>check_back_space() ? "\<cr>" :
+      "\ coc#refresh()
+
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"vnoremap ( d<esc>i(
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 function! s:build_quickfix_list(lines)
   call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
